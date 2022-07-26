@@ -1,8 +1,7 @@
-import React from "react";
 import style from "./Button.module.scss";
 
-function Button() {
-  return <button className={style.button}>Start</button>;
+function Button({ titleButton }: { titleButton: string }) {
+  return <button className={style.button}>{titleButton}</button>;
 }
 
 export default Button;
