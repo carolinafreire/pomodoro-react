@@ -1,15 +1,41 @@
-import style from "./Timer.module.scss";
-import Button from "./../Button/index";
+import Button from "../Button";
 import Clock from "./Clock";
+import style from "./Timer.module.scss";
+import timeToSeconds from "../../common/utils/time";
+import { ITask } from "../../types/task";
+import { useEffect, useState } from "react";
 
-function Timer() {
+interface Props {
+  selected: ITask | undefined;
+  finishTask: () => void;
+}
+
+function Timer({ selected, finishTask }: Props) {
+  const [time, setTime] = useState<number>();
+
+  useEffect(() => {
+    if (selected?.time) {
+      setTime(timeToSeconds(selected.time));
+    }
+  }, [selected]);
+
+  function regressive(counter: number = 0) {
+    setTimeout(() => {
+      if (counter > 0) {
+        setTime(counter - 1);
+        return regressive(counter - 1);
+      }
+      finishTask();
+    }, 1000);
+  }
+
   return (
     <div className={style.timer}>
-      <p className={style.title}> Escolha uma tarefa e inicie o cronômetro </p>
+      <p className={style.title}>Escolha um card e inicie o Cronômetro</p>
       <div className={style.clockWrapper}>
-        <Clock />
+        <Clock time={time} />
       </div>
-      <Button>Start</Button>
+      <Button onClick={() => regressive(time)}>Start</Button>
     </div>
   );
 }
